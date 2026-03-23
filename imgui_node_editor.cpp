@@ -4391,6 +4391,20 @@ ed::EditorAction::AcceptResult ed::ShortcutAction::Accept(const Control& control
     Action candidateAction = None;
 
     auto& io = ImGui::GetIO();
+auto& io = ImGui::GetIO();
+
+#if defined(IMGUI_VERSION_NUM) && (IMGUI_VERSION_NUM >= 18822)
+    if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGuiKey_X))
+        candidateAction = Cut;
+    if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGuiKey_C))
+        candidateAction = Copy;
+    if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGuiKey_V))
+        candidateAction = Paste;
+    if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(GetKeyIndexForD()))
+        candidateAction = Duplicate;
+    if (!io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGuiKey_Space))
+        candidateAction = CreateNode;
+#else
     if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_X)))
         candidateAction = Cut;
     if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_C)))
@@ -4401,6 +4415,7 @@ ed::EditorAction::AcceptResult ed::ShortcutAction::Accept(const Control& control
         candidateAction = Duplicate;
     if (!io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Space)))
         candidateAction = CreateNode;
+#endif
 
     if (candidateAction != None)
     {
@@ -4953,7 +4968,11 @@ ed::EditorAction::AcceptResult ed::DeleteItemsAction::Accept(const Control& cont
         return False;
 
     auto& io = ImGui::GetIO();
+#if defined(IMGUI_VERSION_NUM) && (IMGUI_VERSION_NUM >= 18822)
+    if (Editor->CanAcceptUserInput() && ImGui::IsKeyPressed(ImGuiKey_Delete) && Editor->AreShortcutsEnabled())
+#else
     if (Editor->CanAcceptUserInput() && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete)) && Editor->AreShortcutsEnabled())
+#endif
     {
         auto& selection = Editor->GetSelectedObjects();
         if (!selection.empty())
