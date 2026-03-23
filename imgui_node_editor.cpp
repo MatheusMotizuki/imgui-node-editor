@@ -4391,7 +4391,6 @@ ed::EditorAction::AcceptResult ed::ShortcutAction::Accept(const Control& control
     Action candidateAction = None;
 
     auto& io = ImGui::GetIO();
-auto& io = ImGui::GetIO();
 
 #if defined(IMGUI_VERSION_NUM) && (IMGUI_VERSION_NUM >= 18822)
     if (io.KeyCtrl && !io.KeyShift && !io.KeyAlt && ImGui::IsKeyPressed(ImGuiKey_X))
